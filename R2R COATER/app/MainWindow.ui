@@ -1,0 +1,1931 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="windowModality">
+   <enum>Qt::NonModal</enum>
+  </property>
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1353</width>
+    <height>734</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <property name="autoFillBackground">
+   <bool>false</bool>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">QWidget {
+    background: transparent;
+    color: #ecf0f1;
+    font-family: &quot;Segoe UI&quot;, Arial, sans-serif;
+}
+QMainWindow {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:1, 
+                stop:0 #2c3e50, stop:0.5 #34495e, stop:1 #3a4f6b);
+    color: #ecf0f1;
+    font-family: &quot;Segoe UI&quot;, Arial, sans-serif;
+    font-size: 13px;
+}
+QLabel {
+	font-size: 14px;
+font-weight: bold;
+}
+
+</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Ignored" vsizetype="Preferred">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
+   <layout class="QGridLayout" name="gridLayout_2">
+    <item row="0" column="0">
+     <widget class="QWidget" name="gridWidget" native="true">
+      <layout class="QGridLayout" name="gridLayout"/>
+     </widget>
+    </item>
+   </layout>
+   <widget class="QGroupBox" name="comportselectergroupBox">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>10</y>
+      <width>721</width>
+      <height>101</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QGroupBox {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:1, 
+                stop:0 #34495e, stop:1 #2c3e50);
+    border: 1px solid #4a5f7a;
+    border-radius: 12px;
+    color: #ecf0f1;
+    font-size: 18px;
+    font-weight: 600;
+    margin-top: 10px;
+    padding-top: 10px;
+}
+
+QGroupBox::title {
+    color: #ecf0f1;
+    left: 10px;
+    padding: 0 5px;
+    subcontrol-origin: margin;
+    subcontrol-position: top left;
+}</string>
+    </property>
+    <property name="title">
+     <string>COM Port Selecter</string>
+    </property>
+    <widget class="QLabel" name="comportlabel">
+     <property name="geometry">
+      <rect>
+       <x>40</x>
+       <y>40</y>
+       <width>91</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QLabel {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:1, 
+                stop:0 #3a4f6b, stop:1 #2c3e50);
+    border: 1px solid #4a5f7a;
+    border-radius: 12px;
+    padding: 12px 5px;
+	font-size: 14px;
+}</string>
+     </property>
+     <property name="text">
+      <string>COM Port :</string>
+     </property>
+    </widget>
+    <widget class="QComboBox" name="comportcomboBox">
+     <property name="geometry">
+      <rect>
+       <x>170</x>
+       <y>40</y>
+       <width>151</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QComboBox {
+    background: #34495e;
+    border: 1px solid #4a5f7a;
+    border-radius: 6px;
+    color: #ecf0f1;
+    font-size: 13px;
+    padding: 6px 12px;
+    min-width: 120px;
+}
+
+QComboBox:focus {
+    border: 1px solid #3498db;
+}
+
+
+QComboBox QAbstractItemView {
+    background: #34495e;
+    border: 1px solid #4a5f7a;
+    color: #ecf0f1;
+    selection-background-color: #3498db;
+}</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="comportconnectpushButton">
+     <property name="geometry">
+      <rect>
+       <x>360</x>
+       <y>40</y>
+       <width>131</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QPushButton {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:1, 
+                stop:0 #3498db, stop:1 #2980b9);
+    border: none;
+    border-radius: 6px;
+    color: white;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 8px 16px;
+    text-transform: uppercase;
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:1, 
+                stop:0 #52a8e0, stop:1 #3498db);
+}
+
+QPushButton:pressed {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:1, 
+                stop:0 #2980b9, stop:1 #1f5f8b);
+}</string>
+     </property>
+     <property name="text">
+      <string>Connect</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="comportrefreshpushButton">
+     <property name="geometry">
+      <rect>
+       <x>530</x>
+       <y>40</y>
+       <width>111</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QPushButton {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:1, 
+                stop:0 #7f8c8d, stop:1 #95a5a6);
+    border: none;
+    border-radius: 6px;
+    color: white;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 8px 16px;
+    text-transform: uppercase;
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:1, 
+                stop:0 #95a5a6, stop:1 #b2bec3);
+}
+</string>
+     </property>
+     <property name="text">
+      <string>Refresh</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="comportindicator">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>50</y>
+       <width>15</width>
+       <height>15</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QLabel {
+    background: #e74c3c;
+    border-radius: 7px;
+    min-width: 15px;
+    max-width: 15px;
+    min-height: 15px;
+    max-height: 15px;
+}
+
+QLabel#connectionStatus[connected=&quot;true&quot;] {
+    background: #27ae60;
+}</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QGroupBox" name="inkpumpgroupBox">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>120</y>
+      <width>731</width>
+      <height>241</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QGroupBox {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:1, 
+                stop:0 #34495e, stop:1 #2c3e50);
+    border: 1px solid #4a5f7a;
+    border-radius: 12px;
+    color: #ecf0f1;
+    font-size: 18px;
+    font-weight: 600;
+    margin-top: 10px;
+    padding-top: 10px;
+}
+
+QGroupBox::title {
+    color: #ecf0f1;
+    left: 10px;
+    padding: 0 5px;
+    subcontrol-origin: margin;
+    subcontrol-position: top left;
+}</string>
+    </property>
+    <property name="title">
+     <string>Ink Pump Configeration</string>
+    </property>
+    <widget class="QLabel" name="label_2">
+     <property name="geometry">
+      <rect>
+       <x>30</x>
+       <y>72</y>
+       <width>51</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>INK 01 :</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_3">
+     <property name="geometry">
+      <rect>
+       <x>30</x>
+       <y>110</y>
+       <width>51</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>INK 02 :</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_4">
+     <property name="geometry">
+      <rect>
+       <x>30</x>
+       <y>150</y>
+       <width>61</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>INK 03 :</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_5">
+     <property name="geometry">
+      <rect>
+       <x>30</x>
+       <y>190</y>
+       <width>51</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>INK 04 :</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_6">
+     <property name="geometry">
+      <rect>
+       <x>80</x>
+       <y>40</y>
+       <width>101</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true"/>
+     </property>
+     <property name="text">
+      <string>Syringe Size</string>
+     </property>
+    </widget>
+    <widget class="QComboBox" name="syringersizecomboBox01">
+     <property name="geometry">
+      <rect>
+       <x>90</x>
+       <y>71</y>
+       <width>76</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QComboBox {
+    background: #34495e;
+    border: 1px solid #4a5f7a;
+    border-radius: 6px;
+    color: #ecf0f1;
+    font-size: 13px;
+    padding: 6px 12px;
+    min-width: 50px;
+}
+
+QComboBox:focus {
+    border: 1px solid #3498db;
+}
+
+
+QComboBox QAbstractItemView {
+    background: #34495e;
+    border: 1px solid #4a5f7a;
+    color: #ecf0f1;
+    selection-background-color: #3498db;
+}</string>
+     </property>
+    </widget>
+    <widget class="QComboBox" name="syringersizecomboBox02">
+     <property name="geometry">
+      <rect>
+       <x>90</x>
+       <y>110</y>
+       <width>76</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QComboBox {
+    background: #34495e;
+    border: 1px solid #4a5f7a;
+    border-radius: 6px;
+    color: #ecf0f1;
+    font-size: 13px;
+    padding: 6px 12px;
+    min-width: 50px;
+}
+
+QComboBox:focus {
+    border: 1px solid #3498db;
+}
+
+
+QComboBox QAbstractItemView {
+    background: #34495e;
+    border: 1px solid #4a5f7a;
+    color: #ecf0f1;
+    selection-background-color: #3498db;
+}</string>
+     </property>
+    </widget>
+    <widget class="QComboBox" name="syringersizecomboBox03">
+     <property name="geometry">
+      <rect>
+       <x>90</x>
+       <y>150</y>
+       <width>76</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QComboBox {
+    background: #34495e;
+    border: 1px solid #4a5f7a;
+    border-radius: 6px;
+    color: #ecf0f1;
+    font-size: 13px;
+    padding: 6px 12px;
+    min-width: 50px;
+}
+
+QComboBox:focus {
+    border: 1px solid #3498db;
+}
+
+
+QComboBox QAbstractItemView {
+    background: #34495e;
+    border: 1px solid #4a5f7a;
+    color: #ecf0f1;
+    selection-background-color: #3498db;
+}</string>
+     </property>
+    </widget>
+    <widget class="QComboBox" name="syringersizecomboBox04">
+     <property name="geometry">
+      <rect>
+       <x>90</x>
+       <y>190</y>
+       <width>76</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QComboBox {
+    background: #34495e;
+    border: 1px solid #4a5f7a;
+    border-radius: 6px;
+    color: #ecf0f1;
+    font-size: 13px;
+    padding: 6px 12px;
+    min-width: 50px;
+}
+
+QComboBox:focus {
+    border: 1px solid #3498db;
+}
+
+
+QComboBox QAbstractItemView {
+    background: #34495e;
+    border: 1px solid #4a5f7a;
+    color: #ecf0f1;
+    selection-background-color: #3498db;
+}</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_7">
+     <property name="geometry">
+      <rect>
+       <x>190</x>
+       <y>40</y>
+       <width>81</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Flow Rate</string>
+     </property>
+    </widget>
+    <widget class="QDoubleSpinBox" name="flowratedoubleSpinBox01">
+     <property name="geometry">
+      <rect>
+       <x>190</x>
+       <y>70</y>
+       <width>81</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QDoubleSpinBox {
+    background: #2c3e50;
+    border: 1px solid #4a5f7a;
+    border-radius: 4px;
+    color: #ecf0f1;
+    font-size: 23px;
+
+}
+
+QDoubleSpinBox:focus {
+    border: 1px solid #3498db;
+}
+</string>
+     </property>
+    </widget>
+    <widget class="QDoubleSpinBox" name="flowratedoubleSpinBox02">
+     <property name="geometry">
+      <rect>
+       <x>190</x>
+       <y>110</y>
+       <width>81</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QDoubleSpinBox {
+    background: #2c3e50;
+    border: 1px solid #4a5f7a;
+    border-radius: 4px;
+    color: #ecf0f1;
+    font-size: 23px;
+
+}
+
+QDoubleSpinBox:focus {
+    border: 1px solid #3498db;
+}
+</string>
+     </property>
+    </widget>
+    <widget class="QDoubleSpinBox" name="flowratedoubleSpinBox03">
+     <property name="geometry">
+      <rect>
+       <x>190</x>
+       <y>150</y>
+       <width>81</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QDoubleSpinBox {
+    background: #2c3e50;
+    border: 1px solid #4a5f7a;
+    border-radius: 4px;
+    color: #ecf0f1;
+    font-size: 23px;
+
+}
+
+QDoubleSpinBox:focus {
+    border: 1px solid #3498db;
+}
+</string>
+     </property>
+    </widget>
+    <widget class="QDoubleSpinBox" name="flowratedoubleSpinBox04">
+     <property name="geometry">
+      <rect>
+       <x>190</x>
+       <y>190</y>
+       <width>81</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QDoubleSpinBox {
+    background: #2c3e50;
+    border: 1px solid #4a5f7a;
+    border-radius: 4px;
+    color: #ecf0f1;
+    font-size: 23px;
+
+}
+
+QDoubleSpinBox:focus {
+    border: 1px solid #3498db;
+}
+</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="inkmotorpushButton01Forward">
+     <property name="geometry">
+      <rect>
+       <x>320</x>
+       <y>70</y>
+       <width>111</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QPushButton {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:1, 
+                stop:0 #3498db, stop:1 #2980b9);
+    border: none;
+    border-radius: 6px;
+    color: white;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 8px 16px;
+    text-transform: uppercase;
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:1, 
+                stop:0 #52a8e0, stop:1 #3498db);
+}
+
+QPushButton:pressed {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:1, 
+                stop:0 #2980b9, stop:1 #1f5f8b);
+}</string>
+     </property>
+     <property name="text">
+      <string>Forward</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="inkmotorpushButton02Forward">
+     <property name="geometry">
+      <rect>
+       <x>320</x>
+       <y>110</y>
+       <width>111</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QPushButton {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:1, 
+                stop:0 #3498db, stop:1 #2980b9);
+    border: none;
+    border-radius: 6px;
+    color: white;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 8px 16px;
+    text-transform: uppercase;
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:1, 
+                stop:0 #52a8e0, stop:1 #3498db);
+}
+
+QPushButton:pressed {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:1, 
+                stop:0 #2980b9, stop:1 #1f5f8b);
+}</string>
+     </property>
+     <property name="text">
+      <string>Forward</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="inkmotorpushButton03Forward">
+     <property name="geometry">
+      <rect>
+       <x>320</x>
+       <y>150</y>
+       <width>111</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QPushButton {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:1, 
+                stop:0 #3498db, stop:1 #2980b9);
+    border: none;
+    border-radius: 6px;
+    color: white;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 8px 16px;
+    text-transform: uppercase;
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:1, 
+                stop:0 #52a8e0, stop:1 #3498db);
+}
+
+QPushButton:pressed {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:1, 
+                stop:0 #2980b9, stop:1 #1f5f8b);
+}</string>
+     </property>
+     <property name="text">
+      <string>Forward</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="inkmotorpushButton04Forward">
+     <property name="geometry">
+      <rect>
+       <x>320</x>
+       <y>190</y>
+       <width>111</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QPushButton {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:1, 
+                stop:0 #3498db, stop:1 #2980b9);
+    border: none;
+    border-radius: 6px;
+    color: white;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 8px 16px;
+    text-transform: uppercase;
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:1, 
+                stop:0 #52a8e0, stop:1 #3498db);
+}
+
+QPushButton:pressed {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:1, 
+                stop:0 #2980b9, stop:1 #1f5f8b);
+}</string>
+     </property>
+     <property name="text">
+      <string>Forward</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="inkmotorpushButton01Backward">
+     <property name="geometry">
+      <rect>
+       <x>460</x>
+       <y>70</y>
+       <width>111</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QPushButton {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:1, 
+                stop:0 #7f8c8d, stop:1 #95a5a6);
+    border: none;
+    border-radius: 6px;
+    color: white;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 8px 16px;
+    text-transform: uppercase;
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:1, 
+                stop:0 #95a5a6, stop:1 #b2bec3);
+}
+</string>
+     </property>
+     <property name="text">
+      <string>Backward</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="inkmotorpushButton02Backward">
+     <property name="geometry">
+      <rect>
+       <x>460</x>
+       <y>110</y>
+       <width>111</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QPushButton {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:1, 
+                stop:0 #7f8c8d, stop:1 #95a5a6);
+    border: none;
+    border-radius: 6px;
+    color: white;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 8px 16px;
+    text-transform: uppercase;
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:1, 
+                stop:0 #95a5a6, stop:1 #b2bec3);
+}
+</string>
+     </property>
+     <property name="text">
+      <string>Backward</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="inkmotorpushButton03Backward">
+     <property name="geometry">
+      <rect>
+       <x>460</x>
+       <y>150</y>
+       <width>111</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QPushButton {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:1, 
+                stop:0 #7f8c8d, stop:1 #95a5a6);
+    border: none;
+    border-radius: 6px;
+    color: white;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 8px 16px;
+    text-transform: uppercase;
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:1, 
+                stop:0 #95a5a6, stop:1 #b2bec3);
+}
+</string>
+     </property>
+     <property name="text">
+      <string>Backward</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="inkmotorpushButton03Backward_2">
+     <property name="geometry">
+      <rect>
+       <x>460</x>
+       <y>190</y>
+       <width>111</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QPushButton {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:1, 
+                stop:0 #7f8c8d, stop:1 #95a5a6);
+    border: none;
+    border-radius: 6px;
+    color: white;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 8px 16px;
+    text-transform: uppercase;
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:1, 
+                stop:0 #95a5a6, stop:1 #b2bec3);
+}
+</string>
+     </property>
+     <property name="text">
+      <string>Backward</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="ink01indicator">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>80</y>
+       <width>15</width>
+       <height>15</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QLabel {
+    background: #e74c3c;
+    border-radius: 7px;
+    min-width: 15px;
+    max-width: 15px;
+    min-height: 15px;
+    max-height: 15px;
+}
+
+QLabel#connectionStatus[connected=&quot;true&quot;] {
+    background: #27ae60;
+}</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+    <widget class="QLabel" name="ink02indicator">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>120</y>
+       <width>15</width>
+       <height>15</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QLabel {
+    background: #e74c3c;
+    border-radius: 7px;
+    min-width: 15px;
+    max-width: 15px;
+    min-height: 15px;
+    max-height: 15px;
+}
+
+QLabel#connectionStatus[connected=&quot;true&quot;] {
+    background: #27ae60;
+}</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+    <widget class="QLabel" name="ink03indicator">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>160</y>
+       <width>15</width>
+       <height>15</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QLabel {
+    background: #e74c3c;
+    border-radius: 7px;
+    min-width: 15px;
+    max-width: 15px;
+    min-height: 15px;
+    max-height: 15px;
+}
+
+QLabel#connectionStatus[connected=&quot;true&quot;] {
+    background: #27ae60;
+}</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+    <widget class="QLabel" name="ink04indicator">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>200</y>
+       <width>15</width>
+       <height>15</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QLabel {
+    background: #e74c3c;
+    border-radius: 7px;
+    min-width: 15px;
+    max-width: 15px;
+    min-height: 15px;
+    max-height: 15px;
+}
+
+QLabel#connectionStatus[connected=&quot;true&quot;] {
+    background: #27ae60;
+}</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="inkmotorpushButton01Stop">
+     <property name="geometry">
+      <rect>
+       <x>600</x>
+       <y>68</y>
+       <width>101</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QPushButton {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:1, 
+                stop:0 #e74c3c, stop:1 #c0392b);
+    border: none;
+    border-radius: 6px;
+    color: white;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 8px 16px;
+    text-transform: uppercase;
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:1, 
+                stop:0 #ec7063, stop:1 #e74c3c);
+}</string>
+     </property>
+     <property name="text">
+      <string>STOP</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="inkmotorpushButton02Stop">
+     <property name="geometry">
+      <rect>
+       <x>600</x>
+       <y>110</y>
+       <width>101</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QPushButton {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:1, 
+                stop:0 #e74c3c, stop:1 #c0392b);
+    border: none;
+    border-radius: 6px;
+    color: white;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 8px 16px;
+    text-transform: uppercase;
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:1, 
+                stop:0 #ec7063, stop:1 #e74c3c);
+}</string>
+     </property>
+     <property name="text">
+      <string>STOP</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="inkmotorpushButton03Stop">
+     <property name="geometry">
+      <rect>
+       <x>600</x>
+       <y>150</y>
+       <width>101</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QPushButton {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:1, 
+                stop:0 #e74c3c, stop:1 #c0392b);
+    border: none;
+    border-radius: 6px;
+    color: white;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 8px 16px;
+    text-transform: uppercase;
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:1, 
+                stop:0 #ec7063, stop:1 #e74c3c);
+}</string>
+     </property>
+     <property name="text">
+      <string>STOP</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="inkmotorpushButton04Stop">
+     <property name="geometry">
+      <rect>
+       <x>600</x>
+       <y>190</y>
+       <width>101</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QPushButton {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:1, 
+                stop:0 #e74c3c, stop:1 #c0392b);
+    border: none;
+    border-radius: 6px;
+    color: white;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 8px 16px;
+    text-transform: uppercase;
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:1, 
+                stop:0 #ec7063, stop:1 #e74c3c);
+}</string>
+     </property>
+     <property name="text">
+      <string>STOP</string>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QPushButton" name="startpushButton">
+    <property name="geometry">
+     <rect>
+      <x>760</x>
+      <y>600</y>
+      <width>181</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton{
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:1, 
+                stop:0 #27ae60, stop:1 #2ecc71);
+    font-size: 30px;
+    font-weight: 600;
+    border-radius: 6px;
+    min-width: 100px;
+    padding: 10px 20px;
+   text-transform: uppercase;
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:1, 
+                stop:0 #2ecc71, stop:1 #58d68d);
+}</string>
+    </property>
+    <property name="text">
+     <string>Start</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="stoppushButton">
+    <property name="geometry">
+     <rect>
+      <x>970</x>
+      <y>600</y>
+      <width>181</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:1, 
+                stop:0 #e74c3c, stop:1 #c0392b);
+    font-size: 30px;
+    font-weight: 600;
+    min-width: 100px; 
+	border-radius: 6px;
+    padding: 10px 20px;
+   text-transform: uppercase;
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:1, 
+                stop:0 #ec7063, stop:1 #e74c3c);
+}</string>
+    </property>
+    <property name="text">
+     <string>Stop</string>
+    </property>
+   </widget>
+   <widget class="QGroupBox" name="movementspeedgroupBox">
+    <property name="geometry">
+     <rect>
+      <x>760</x>
+      <y>370</y>
+      <width>381</width>
+      <height>201</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QGroupBox {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:1, 
+                stop:0 #34495e, stop:1 #2c3e50);
+    border: 1px solid #4a5f7a;
+    border-radius: 12px;
+    color: #ecf0f1;
+    font-size: 18px;
+    font-weight: 600;
+    margin-top: 10px;
+    padding-top: 10px;
+}
+
+QGroupBox::title {
+    color: #ecf0f1;
+    left: 10px;
+    padding: 0 5px;
+    subcontrol-origin: margin;
+    subcontrol-position: top left;
+}
+</string>
+    </property>
+    <property name="title">
+     <string>Movement Speed</string>
+    </property>
+    <widget class="QLabel" name="label_10">
+     <property name="geometry">
+      <rect>
+       <x>60</x>
+       <y>70</y>
+       <width>111</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Coating Speed</string>
+     </property>
+    </widget>
+    <widget class="QDoubleSpinBox" name="coaterspeedoubleSpinBox">
+     <property name="geometry">
+      <rect>
+       <x>200</x>
+       <y>50</y>
+       <width>101</width>
+       <height>61</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QDoubleSpinBox {
+    background: #2c3e50;
+    border: 1px solid #4a5f7a;
+    border-radius: 4px;
+    color: #ecf0f1;
+    font-size: 25px;;
+    padding: 6px 8px;
+}
+
+QDoubleSpinBox:focus {
+    border: 1px solid #3498db;
+}
+
+
+</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="drivemotorforwardpushButton">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>140</y>
+       <width>101</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QPushButton {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:1, 
+                stop:0 #3498db, stop:1 #2980b9);
+    border: none;
+    border-radius: 6px;
+    color: white;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 8px 16px;
+    text-transform: uppercase;
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:1, 
+                stop:0 #52a8e0, stop:1 #3498db);
+}
+
+QPushButton:pressed {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:1, 
+                stop:0 #2980b9, stop:1 #1f5f8b);
+}</string>
+     </property>
+     <property name="text">
+      <string>Forward</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="drivemotorbackwardpushButton">
+     <property name="geometry">
+      <rect>
+       <x>120</x>
+       <y>140</y>
+       <width>121</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QPushButton {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:1, 
+                stop:0 #7f8c8d, stop:1 #95a5a6);
+    border: none;
+    border-radius: 6px;
+    color: white;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 8px 16px;
+    text-transform: uppercase;
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:1, 
+                stop:0 #95a5a6, stop:1 #b2bec3);
+}
+</string>
+     </property>
+     <property name="text">
+      <string>Backward</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="drivemotorstoppushButton">
+     <property name="geometry">
+      <rect>
+       <x>250</x>
+       <y>140</y>
+       <width>111</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QPushButton {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:1, 
+                stop:0 #e74c3c, stop:1 #c0392b);
+    border: none;
+    border-radius: 6px;
+    color: white;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 8px 16px;
+    text-transform: uppercase;
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:1, 
+                stop:0 #ec7063, stop:1 #e74c3c);
+}</string>
+     </property>
+     <property name="text">
+      <string>Stop</string>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QGroupBox" name="tempgroupBox">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>370</y>
+      <width>351</width>
+      <height>201</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QGroupBox {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:1, 
+                stop:0 #34495e, stop:1 #2c3e50);
+    border: 1px solid #4a5f7a;
+    border-radius: 12px;
+    color: #ecf0f1;
+    font-size: 18px;
+    font-weight: 600;
+    margin-top: 10px;
+    padding-top: 10px;
+}
+
+QGroupBox::title {
+    color: #ecf0f1;
+    left: 10px;
+    padding: 0 5px;
+    subcontrol-origin: margin;
+    subcontrol-position: top left;
+}</string>
+    </property>
+    <property name="title">
+     <string>Bed Temperature</string>
+    </property>
+    <widget class="QLabel" name="label_11">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>60</y>
+       <width>81</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Coater 01 :</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_12">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>150</y>
+       <width>81</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Coater 02 :</string>
+     </property>
+    </widget>
+    <widget class="QDoubleSpinBox" name="tempdoubleSpinBox01">
+     <property name="geometry">
+      <rect>
+       <x>90</x>
+       <y>50</y>
+       <width>91</width>
+       <height>51</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QDoubleSpinBox {
+    background: #2c3e50;
+    border: 1px solid #4a5f7a;
+    border-radius: 4px;
+    color: #ecf0f1;
+    font-size: 25px;
+    padding: 6px 8px;
+}
+
+QDoubleSpinBox:focus {
+    border: 1px solid #3498db;
+}
+</string>
+     </property>
+    </widget>
+    <widget class="QDoubleSpinBox" name="tempdoubleSpinBox02">
+     <property name="geometry">
+      <rect>
+       <x>90</x>
+       <y>130</y>
+       <width>91</width>
+       <height>51</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QDoubleSpinBox {
+    background: #2c3e50;
+    border: 1px solid #4a5f7a;
+    border-radius: 4px;
+    color: #ecf0f1;
+    font-size: 25px;;
+    padding: 6px 8px;
+}
+
+QDoubleSpinBox:focus {
+    border: 1px solid #3498db;
+}
+</string>
+     </property>
+    </widget>
+    <widget class="QLCDNumber" name="templcdNumber01">
+     <property name="geometry">
+      <rect>
+       <x>190</x>
+       <y>50</y>
+       <width>121</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QLCDNumber {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:1, 
+                stop:0 #2c3e50, stop:1 #34495e);
+    border: 1px solid #4a5f7a;
+    border-radius: 6px;
+    color: #ecf0f1;
+ 
+    font-weight: bold;
+    padding: 12px;
+    text-align: center;
+}</string>
+     </property>
+    </widget>
+    <widget class="QLCDNumber" name="templcdNumber02">
+     <property name="geometry">
+      <rect>
+       <x>190</x>
+       <y>130</y>
+       <width>121</width>
+       <height>51</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QLCDNumber {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:1, 
+                stop:0 #2c3e50, stop:1 #34495e);
+    border: 1px solid #4a5f7a;
+    border-radius: 6px;
+    color: #ecf0f1;
+    font-size: 24px;
+    font-weight: bold;
+    padding: 12px;
+    text-align: center;
+}</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_13">
+     <property name="geometry">
+      <rect>
+       <x>210</x>
+       <y>20</y>
+       <width>91</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Currunt temp</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_14">
+     <property name="geometry">
+      <rect>
+       <x>120</x>
+       <y>30</y>
+       <width>47</width>
+       <height>13</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>°C</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_15">
+     <property name="geometry">
+      <rect>
+       <x>320</x>
+       <y>60</y>
+       <width>16</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>°C</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_16">
+     <property name="geometry">
+      <rect>
+       <x>320</x>
+       <y>150</y>
+       <width>16</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>°C</string>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QLabel" name="livecamlabel">
+    <property name="geometry">
+     <rect>
+      <x>760</x>
+      <y>20</y>
+      <width>581</width>
+      <height>341</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QLabel {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:1, 
+                stop:0 #3a4f6b, stop:1 #2c3e50);
+    border: 1px solid #4a5f7a;
+    border-radius: 12px;
+    padding: 12px 5px;
+	font-size: 14px;
+}</string>
+    </property>
+    <property name="text">
+     <string>Live Camera</string>
+    </property>
+   </widget>
+   <widget class="QGroupBox" name="currentstategroupBox">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>580</y>
+      <width>731</width>
+      <height>91</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QGroupBox {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:1, 
+                stop:0 #34495e, stop:1 #2c3e50);
+    border: 1px solid #4a5f7a;
+    border-radius: 12px;
+    color: #ecf0f1;
+    font-size: 18px;
+    font-weight: 600;
+    margin-top: 10px;
+    padding-top: 10px;
+}
+
+QGroupBox::title {
+    color: #ecf0f1;
+    left: 10px;
+    padding: 0 5px;
+    subcontrol-origin: margin;
+    subcontrol-position: top left;
+}
+</string>
+    </property>
+    <property name="title">
+     <string>Coater Current State</string>
+    </property>
+    <widget class="QLabel" name="currentlabel01">
+     <property name="geometry">
+      <rect>
+       <x>250</x>
+       <y>30</y>
+       <width>161</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QLabel {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:1, 
+                stop:0 #3a4f6b, stop:1 #2c3e50);
+    border: 1px solid #4a5f7a;
+    border-radius: 12px;
+    padding: 12px 5px;
+	font-size: 14px;
+}</string>
+     </property>
+     <property name="text">
+      <string>Running</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="currentlabel02">
+     <property name="geometry">
+      <rect>
+       <x>500</x>
+       <y>30</y>
+       <width>161</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QLabel {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:1, 
+                stop:0 #3a4f6b, stop:1 #2c3e50);
+    border: 1px solid #4a5f7a;
+    border-radius: 12px;
+    padding: 12px 5px;
+	font-size: 14px;
+}</string>
+     </property>
+     <property name="text">
+      <string>Pause</string>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QGroupBox" name="groupBox">
+    <property name="geometry">
+     <rect>
+      <x>390</x>
+      <y>380</y>
+      <width>351</width>
+      <height>191</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QGroupBox {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:1, 
+                stop:0 #34495e, stop:1 #2c3e50);
+    border: 1px solid #4a5f7a;
+    border-radius: 12px;
+    color: #ecf0f1;
+    font-size: 18px;
+    font-weight: 600;
+    margin-top: 10px;
+    padding-top: 10px;
+}
+
+QGroupBox::title {
+    color: #ecf0f1;
+    left: 10px;
+    padding: 0 5px;
+    subcontrol-origin: margin;
+    subcontrol-position: top left;
+}
+</string>
+    </property>
+    <property name="title">
+     <string>Air Temperature</string>
+    </property>
+    <widget class="QLabel" name="label">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>90</y>
+       <width>81</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Air Heater</string>
+     </property>
+    </widget>
+    <widget class="QDoubleSpinBox" name="doubleSpinBox">
+     <property name="geometry">
+      <rect>
+       <x>110</x>
+       <y>80</y>
+       <width>101</width>
+       <height>51</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QDoubleSpinBox {
+    background: #2c3e50;
+    border: 1px solid #4a5f7a;
+    border-radius: 4px;
+    color: #ecf0f1;
+    font-size: 25px;
+    padding: 6px 8px;
+}
+
+QDoubleSpinBox:focus {
+    border: 1px solid #3498db;
+}
+</string>
+     </property>
+    </widget>
+    <widget class="QLCDNumber" name="lcdNumber">
+     <property name="geometry">
+      <rect>
+       <x>223</x>
+       <y>80</y>
+       <width>101</width>
+       <height>51</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QLCDNumber {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:1, 
+                stop:0 #2c3e50, stop:1 #34495e);
+    border: 1px solid #4a5f7a;
+    border-radius: 6px;
+    color: #ecf0f1;
+ 
+    font-weight: bold;
+    padding: 12px;
+    text-align: center;
+}</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_17">
+     <property name="geometry">
+      <rect>
+       <x>140</x>
+       <y>40</y>
+       <width>47</width>
+       <height>13</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>°C</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_18">
+     <property name="geometry">
+      <rect>
+       <x>230</x>
+       <y>30</y>
+       <width>101</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Currunt temp</string>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QGroupBox" name="groupBox_2">
+    <property name="geometry">
+     <rect>
+      <x>1150</x>
+      <y>369</y>
+      <width>191</width>
+      <height>201</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QGroupBox {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:1, 
+                stop:0 #34495e, stop:1 #2c3e50);
+    border: 1px solid #4a5f7a;
+    border-radius: 12px;
+    color: #ecf0f1;
+    font-size: 18px;
+    font-weight: 600;
+    margin-top: 10px;
+    padding-top: 10px;
+}
+
+QGroupBox::title {
+    color: #ecf0f1;
+    left: 10px;
+    padding: 0 5px;
+    subcontrol-origin: margin;
+    subcontrol-position: top left;
+}
+</string>
+    </property>
+    <property name="title">
+     <string>Live Camara Config</string>
+    </property>
+    <widget class="QPushButton" name="pushButton">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>60</y>
+       <width>140</width>
+       <height>51</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QPushButton{
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:1, 
+                stop:0 #27ae60, stop:1 #2ecc71);
+    font-size: 20px;
+    font-weight: 600;
+    border-radius: 6px;
+    min-width: 100px;
+    padding: 10px 20px;
+   text-transform: uppercase;
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:1, 
+                stop:0 #2ecc71, stop:1 #58d68d);
+}</string>
+     </property>
+     <property name="text">
+      <string>START</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="pushButton_2">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>130</y>
+       <width>140</width>
+       <height>51</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QPushButton {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:1, 
+                stop:0 #e74c3c, stop:1 #c0392b);
+    font-size: 20px;
+    font-weight: 600;
+    min-width: 100px; 
+	border-radius: 6px;
+    padding: 10px 20px;
+   text-transform: uppercase;
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:1, 
+                stop:0 #ec7063, stop:1 #e74c3c);
+}</string>
+     </property>
+     <property name="text">
+      <string>STOP</string>
+     </property>
+    </widget>
+   </widget>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1353</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QMenuBar {
+    background: #2c3e50;
+    border-bottom: 1px solid #4a5f7a;
+    color: #ecf0f1;
+}
+
+QMenuBar::item {
+    background: transparent;
+    padding: 4px 8px;
+}
+
+QMenuBar::item:selected {
+    background: #3498db;
+}</string>
+   </property>
+   <widget class="QMenu" name="menuEdit">
+    <property name="styleSheet">
+     <string notr="true">QMenu {
+    background: #34495e;
+    border: 1px solid #4a5f7a;
+    color: #ecf0f1;
+}
+
+QMenu::item {
+    padding: 5px 20px;
+}
+
+QMenu::item:selected {
+    background: #3498db;
+}</string>
+    </property>
+    <property name="title">
+     <string>File</string>
+    </property>
+    <addaction name="actionopen"/>
+    <addaction name="actionsave"/>
+    <addaction name="actionSave_As"/>
+    <addaction name="actionAdd_Ink"/>
+   </widget>
+   <addaction name="menuEdit"/>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionopen">
+   <property name="text">
+    <string>Open</string>
+   </property>
+  </action>
+  <action name="actionsave">
+   <property name="text">
+    <string>Save</string>
+   </property>
+  </action>
+  <action name="actionSave_As">
+   <property name="text">
+    <string>Save As</string>
+   </property>
+  </action>
+  <action name="actionAdd_Ink">
+   <property name="text">
+    <string>Add Ink</string>
+   </property>
+  </action>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
