@@ -1,12 +1,22 @@
 #include <Arduino.h>
+#include "driver/ledc.h"
 #include <math.h>
 #include <cmath>
+#include <WiFiClientSecure.h>
+#include <MQTTClient.h>
+#include <EEPROM.h>
+#include "secrets.h"
+#include "WiFi.h"
+#include "esp_system.h"
+#include "esp_heap_caps.h"
+#include "wifi_connect.h"
+#include "AWS_connect.h"
 
 //
-// Roll-to-Roll Controller — ESP32-S3 (Arduino/PlatformIO)
+// Roll-to-Roll Controller — ESP32-S3
 // - 4 injectors (syringe pumps):
-//     • process uses flow (mL/min) → computed step rate
-//     • manual load uses fixed RPM (gentler now: 5 RPM)
+//     • process uses flow (uL/min)
+//     • manual load uses fixed RPM (5 RPM)
 // - Drive roll:
 //     • process uses user m/min (Forward only)
 //     • jog uses fixed 1.0 m/min preset
@@ -276,7 +286,7 @@ void setup() {
   for (int i=0;i<NMOT;i++) {
     Motor& m = *MOTORS[i];
     pinMode(m.pin_dir, OUTPUT);
-    pinMode(m.pin_step, OUTPUT);    // not strictly required for LEDC, but safe
+    pinMode(m.pin_step, OUTPUT);
     setDir(m, m.dir);
     setEn(m, true);
 
@@ -285,10 +295,31 @@ void setup() {
     pulseStop(m);
   }
 
+  // WIFI/AWS connection
+  connectWiFi();
+  connectAWS();
+  client.subscribe(TOPIC_CONTROL);
+
   Serial.println("R2R controller ready");
 }
 
 void loop() {
+  // WIFI/AWS
+  client.loop();
+  yield();
+
+  if (WiFi.status() != WL_CONNECTED) {
+    Serial.println("Wi-Fi drop, reconnecting...");
+    WiFi.reconnect();
+    delay(300);
+    return;
+  }
+  if (!client.connected()) {
+    Serial.println("MQTT drop, reconnecting...");
+    connectAWS();
+    client.onMessage(messageHandler);
+    client.subscribe(TOPIC_CONTROL);
+  }
   // Read lines
   while (Serial.available()) {
     char c = (char)Serial.read();
