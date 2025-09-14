@@ -2,78 +2,46 @@ import json
 import sys
 import threading
 import time
-import serial
-import serial.tools.list_ports
 import cv2
 import numpy as np
 import logging
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QApplication
-from PyQt5.QtCore import QThread, pyqtSignal
-from PyQt5.QtGui import QIcon, QImage, QPixmap
+from PyQt5.QtCore import QThread, pyqtSignal, QObject
+from PyQt5.QtGui import QImage, QPixmap
 from PyQt5.QtCore import Qt
 import AWS_Client
 from MainWindow import Ui_MainWindow
 
 
 # ==========================
-#  Background Serial Thread
+#  Persistent AWS worker (runs inside a QThread)
 # ==========================
-class SerialThread(QThread):
-    feedback = pyqtSignal(str)
-    connection_status = pyqtSignal(bool)
+class AwsWorker(QObject):
+    feedback = pyqtSignal(str)             # emits status messages back to GUI
+    send_request = pyqtSignal(str, str)    # (topic, command)
 
-    def __init__(self):
+    def __init__(self, client, mqtt_lock):
         super().__init__()
-        self.serial = None
-        self.is_running = True
-        self.port = None
-        self.baudrate = 115200
+        self.client = client
+        self.mqtt_lock = mqtt_lock
+        # connect signal to handler (will run in worker thread)
+        self.send_request.connect(self.handle_send, Qt.QueuedConnection)
 
-    def run(self):
-        # Continuously poll the serial buffer and emit lines to the GUI
-        while self.is_running:
-            if self.serial and self.serial.is_open:
-                try:
-                    if self.serial.in_waiting:
-                        data = self.serial.readline().decode(errors="ignore").strip()
-                        if data:
-                            self.feedback.emit(data)
-                except Exception as e:
-                    self.feedback.emit(f"Serial error: {str(e)}")
-                    self.disconnect()
-            QtCore.QThread.msleep(10)
-
-    def connect_port(self, port):
+    def handle_send(self, topic: str, command: str):
+        """Handle publish requests (topic, command). Runs in worker thread."""
+        message = {
+            "timestamp": int(time.time()),
+            "command": command
+        }
         try:
-            self.port = port
-            self.serial = serial.Serial(port, self.baudrate, timeout=1)
-            self.connection_status.emit(True)
-            self.feedback.emit(f"Connected to {port}")
+            with self.mqtt_lock:
+                # publish; adapt QoS/retain as needed
+                self.client.publish(topic, json.dumps(message), 0)
+                self.feedback.emit(f"Sent: {command} → {topic}")
         except Exception as e:
-            self.feedback.emit(f"Connection error: {str(e)}")
-            self.connection_status.emit(False)
-
-    def disconnect(self):
-        try:
-            if self.serial and self.serial.is_open:
-                self.serial.close()
-        finally:
-            self.connection_status.emit(False)
-            self.feedback.emit("Disconnected")
-
-    def send_command(self, cmd):
-        if self.serial and self.serial.is_open:
-            try:
-                self.serial.write(f"{cmd}\n".encode())
-            except Exception as e:
-                self.feedback.emit(f"Send error: {str(e)}")
-        else:
-            self.feedback.emit(f"Not connected. Tried to send: {cmd}")
-
-    def stop(self):
-        self.is_running = False
-        self.disconnect()
+            logging.error(f"Failed to publish: {command} | Error: {e}", exc_info=True)
+            self.feedback.emit(f"Error sending {command} → {topic}")
 
 
 # ==========================
@@ -84,29 +52,31 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         super().__init__()
         self.setupUi(self)
 
-        self.serial_thread = SerialThread()
-        self.process_running = False
-
-        # Initialize MQTT lock
+        # MQTT lock and persistent AWS worker/thread
         self.mqtt_lock = threading.Lock()
+        self.aws_thread = QThread()
+        self.aws_worker = AwsWorker(AWS_Client.client, self.mqtt_lock)
+        self.aws_worker.moveToThread(self.aws_thread)
+        # connect worker feedback to a UI handler
+        self.aws_worker.feedback.connect(self.update_status)
+        # start the thread (worker will respond to send_request emits)
+        self.aws_thread.start()
+
+        self.process_running = False
 
         self._setup_spinboxes()
         self._setup_syringe_boxes()
         self._setup_connections()
-        self._populate_com_ports()
-        self._hide_pause_button_if_present()
+        # no serial ports in this refactor; remove or re-add if needed
+        # self._populate_com_ports()
+        
         self._update_jog_buttons_enabled()
-
-        screen = QApplication.primaryScreen().geometry()
-        self.setGeometry(screen)  # resize to screen size
-        self.show()
 
 
     # ----------------------
     #  UI Setup Helpers
     # ----------------------
     def _setup_spinboxes(self):
-        # Flow rates (mL/min): 0..40, step 0.1, 1 decimal, no keyboard tracking to avoid spam
         for i in range(1, 5):
             sb = getattr(self, f"flowratedoubleSpinBox{i:02d}", None)
             if sb:
@@ -115,7 +85,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                 sb.setDecimals(1)
                 sb.setKeyboardTracking(False)
 
-        # Drive/coater speed (m/min): 0..10, step 0.1, 1 decimal
         if hasattr(self, "coaterspeedoubleSpinBox"):
             self.coaterspeedoubleSpinBox.setRange(0.0, 10.0)
             self.coaterspeedoubleSpinBox.setSingleStep(0.1)
@@ -123,7 +92,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             self.coaterspeedoubleSpinBox.setKeyboardTracking(False)
 
     def _setup_syringe_boxes(self):
-        # For now, force "10 mL" selection for all injectors and disable editing
         for i in range(1, 5):
             cb = getattr(self, f"syringersizecomboBox{i:02d}", None)
             if cb:
@@ -136,15 +104,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
     #  Wiring & UI Handlers
     # ----------------------
     def _setup_connections(self):
-        # Serial thread signals
-        self.serial_thread.feedback.connect(self.update_status)
-        self.serial_thread.connection_status.connect(self.update_connection_indicator)
-
-        # COM port
-        self.comportconnectpushButton.clicked.connect(self.toggle_connection)
-        self.comportrefreshpushButton.clicked.connect(self._populate_com_ports)
-
-        # Ink manual load buttons (fixed 10 RPM handled in firmware)
+        # Ink manual load buttons (fixed RPM handled in firmware)
         self.inkmotorpushButton01Forward.clicked.connect(lambda: self._run_ink_load(1, "FORWARD"))
         self.inkmotorpushButton01Backward.clicked.connect(lambda: self._run_ink_load(1, "BACKWARD"))
         self.inkmotorpushButton01Stop.clicked.connect(lambda: self._stop_ink(1))
@@ -157,7 +117,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.inkmotorpushButton03Backward.clicked.connect(lambda: self._run_ink_load(3, "BACKWARD"))
         self.inkmotorpushButton03Stop.clicked.connect(lambda: self._stop_ink(3))
 
-        # Note: pump 4 backward button name in your UI is "inkmotorpushButton03Backward_2"
         self.inkmotorpushButton04Forward.clicked.connect(lambda: self._run_ink_load(4, "FORWARD"))
         self.inkmotorpushButton03Backward_2.clicked.connect(lambda: self._run_ink_load(4, "BACKWARD"))
         self.inkmotorpushButton04Stop.clicked.connect(lambda: self._stop_ink(4))
@@ -184,75 +143,46 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.startpushButton.clicked.connect(self.start_process)
         self.stoppushButton.clicked.connect(self.stop_process)
 
-        # ---------- MQTT subscribe for video frames ----------
-        AWS_Client.client.subscribe(AWS_Client.topic_video, 1, self.onFramesReceived)
-        print(f"[INFO] Subscribed to topic: {AWS_Client.topic_video}")
+        # Subscribe to video frames via AWS client (unchanged)
+        try:
+            AWS_Client.client.subscribe(AWS_Client.topic_video, 1, self.onFramesReceived)
+            print(f"[INFO] Subscribed to topic: {AWS_Client.topic_video}")
+        except Exception as e:
+            print(f"[WARN] Failed to subscribe to video topic: {e}")
 
     # ----------------------
-    #  Serial/UI Utilities
+    #  Connection checker
     # ----------------------
-    def _populate_com_ports(self):
-        self.comportcomboBox.clear()
-        ports = serial.tools.list_ports.comports()
-        for port in ports:
-            self.comportcomboBox.addItem(port.device)
-
-    def toggle_connection(self):
-        if not self.serial_thread.isRunning():
-            port = self.comportcomboBox.currentText()
-            if port:
-                self.serial_thread.start()
-                self.serial_thread.connect_port(port)
-                self.comportconnectpushButton.setText("Disconnect")
-        else:
-            self.serial_thread.disconnect()
-            self.comportconnectpushButton.setText("Connect")
-
-    def update_status(self, message: str):
-        # For now, print to console; you could also append to a QTextEdit if you add one
-        print(f"ESP32: {message}")
-
-    def update_connection_indicator(self, connected: bool):
-        style = (
-            "QLabel { background: #27ae60; border-radius: 7px; }"
-            if connected
-            else "QLabel { background: #e74c3c; border-radius: 7px; }"
-        )
-        self.comportindicator.setStyleSheet(style)
-
-    def _hide_pause_button_if_present(self):
-        # You decided to remove Pause; hide it defensively if it still exists in the .ui
-        if hasattr(self, "pausepushButton"):
-            self.pausepushButton.hide()
-            self.pausepushButton.setEnabled(False)
-
     def _is_connected(self) -> bool:
-        return bool(self.serial_thread.serial and self.serial_thread.serial.is_open)
+        # return True if client object exists.
+        try:
+            return AWS_Client.client is not None
+        except Exception:
+            return False
 
     # ----------------------
     #  Ink (manual load + process setpoints)
     # ----------------------
     def _send_ink_setpoint(self, pump_number: int):
-        """Send process flow setpoint (mL/min). Does not start the motor."""
         if not self._is_connected():
             return
         sb = getattr(self, f"flowratedoubleSpinBox{pump_number:02d}")
         value = float(sb.value())
-        self.serial_thread.send_command(f"INK{pump_number:02d}_SPEED {value}")
+        # emit (topic, command)
+        self.aws_worker.send_request.emit(AWS_Client.topic_command, f"INK{pump_number:02d}_SPEED {value}")
 
     def _run_ink_load(self, pump_number: int, direction: str):
-        """Manual loading at fixed RPM (set in firmware)."""
         if not self._is_connected():
             self.update_status(f"Cannot run INK{pump_number:02d}: not connected.")
             return
-        self.serial_thread.send_command(f"INK{pump_number:02d} {direction}")
+        self.aws_worker.send_request.emit(AWS_Client.topic_command, f"INK{pump_number:02d} {direction}")
         self._set_ink_indicator(pump_number, True)
 
     def _stop_ink(self, pump_number: int):
         if not self._is_connected():
             self.update_status(f"Cannot stop INK{pump_number:02d}: not connected.")
             return
-        self.serial_thread.send_command(f"INK{pump_number:02d} STOP")
+        self.aws_worker.send_request.emit(AWS_Client.topic_command, f"INK{pump_number:02d} STOP")
         self._set_ink_indicator(pump_number, False)
 
     def _set_ink_indicator(self, pump_number: int, running: bool):
@@ -269,22 +199,19 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
     #  Drive (process setpoint + jog)
     # ----------------------
     def _send_drive_setpoint(self):
-        """Store process drive speed (m/min). Does not start the motor."""
         if not self._is_connected():
             return
         value = float(self.coaterspeedoubleSpinBox.value())
-        self.serial_thread.send_command(f"DRIVE_SPEED {value}")
+        self.aws_worker.send_request.emit(AWS_Client.topic_command, f"DRIVE_SPEED {value}")
 
     def _send_drive_jog(self, direction: str):
-        """Jog at preset speed (in firmware). Disabled during process."""
         if not self._is_connected():
             self.update_status("Cannot control drive: not connected.")
             return
         if self.process_running:
-            # Should be disabled; guard anyway.
             self.update_status("Drive jog disabled during process.")
             return
-        self.serial_thread.send_command(f"DRIVE {direction}")
+        self.aws_worker.send_request.emit(AWS_Client.topic_command, f"DRIVE {direction}")
 
     def _update_jog_buttons_enabled(self):
         enable = (not self.process_running)
@@ -299,59 +226,39 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
     #  Master Process
     # ----------------------
     def start_process(self):
-        """Start process: drive forward at user m/min + injectors with Q>0 forward."""
         if not self._is_connected():
-            self.update_status("Cannot start: not connected to a COM port.")
+            self.update_status("Cannot start: not connected to AWS.")
             return
 
-        # Ensure firmware has current setpoints (spinboxes already send, but safe to re-send)
+        # Re-send setpoints (safe)
         self._send_drive_setpoint()
         for i in range(1, 5):
             self._send_ink_setpoint(i)
 
-        # Start everything
-        self.serial_thread.send_command("PROCESS START")
-        self.sendCommandToAWS("START", AWS_Client.topic_command)
+        # Start process
+        self.aws_worker.send_request.emit(AWS_Client.topic_command, "PROCESS START")
         self.process_running = True
         self._update_jog_buttons_enabled()
 
-        # Labels
         if hasattr(self, "currentlabel01"):
             self.currentlabel01.setText("Running")
         if hasattr(self, "currentlabel02"):
             self.currentlabel02.setText("Ready")
 
     def stop_process(self):
-        """Stop everything; DO NOT reset any setpoints."""
         if self._is_connected():
-            self.serial_thread.send_command("PROCESS STOP")
-            self.sendCommandToAWS("STOP", AWS_Client.topic_command)
+            self.aws_worker.send_request.emit(AWS_Client.topic_command, "PROCESS STOP")
 
         self.process_running = False
         self._update_jog_buttons_enabled()
 
-        # Turn off ink indicators (firmware stopped them)
         for i in range(1, 5):
             self._set_ink_indicator(i, False)
 
-        # Labels
         if hasattr(self, "currentlabel01"):
             self.currentlabel01.setText("Stopped")
         if hasattr(self, "currentlabel02"):
             self.currentlabel02.setText("Ready")
-
-    def sendCommandToAWS(self, command, topic):
-        message = {
-            "timestamp": int(time.time()),
-            "command": command
-        }
-        try:
-            with self.mqtt_lock:
-                AWS_Client.client.publish(topic, json.dumps(message), 0)
-                print(f"Sent: {command}")
-        except Exception as e:
-            logging.error(f"Failed to publish command: {command} | Error: {e}", exc_info=True)
-            print(f"Error: Failed to send command: {command}")
 
     # -------------------- Video frame handler --------------------
     def onFramesReceived(self, client, userdata, message):
@@ -365,15 +272,15 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                 bytes_per_line = ch * w
                 qt_image = QImage(rgb_image.data, w, h, bytes_per_line, QImage.Format_RGB888)
                 pixmap = QPixmap.fromImage(qt_image)
-                # Scale smoothly to fit label while keeping aspect ratio
-                self.livecamlabel.setPixmap(
-                    pixmap.scaled(
-                        self.livecamlabel.width(),
-                        self.livecamlabel.height(),
-                        Qt.KeepAspectRatio,
-                        Qt.SmoothTransformation
+                if hasattr(self, "livecamlabel"):
+                    self.livecamlabel.setPixmap(
+                        pixmap.scaled(
+                            self.livecamlabel.width(),
+                            self.livecamlabel.height(),
+                            Qt.KeepAspectRatio,
+                            Qt.SmoothTransformation
+                        )
                     )
-                )
             else:
                 print("[WARN] Failed to decode image frame")
         except Exception as e:
@@ -381,25 +288,41 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
     # -------------------- Camera controls --------------------
     def CameraOn(self):
-        self.sendCommandToAWS("ON", AWS_Client.topic_cam)
+        self.aws_worker.send_request.emit(AWS_Client.topic_cam, "ON")
 
     def CameraOff(self):
-        self.sendCommandToAWS("OFF", AWS_Client.topic_cam)
+        self.aws_worker.send_request.emit(AWS_Client.topic_cam, "OFF")
 
+    # ----------------------
+    #  Status update helper
+    # ----------------------
+    def update_status(self, message: str):
+        print(f"AWS: {message}")
 
     # ----------------------
     #  Qt Lifecycle
     # ----------------------
     def closeEvent(self, event: QtGui.QCloseEvent):
         try:
-            self.serial_thread.stop()
-            self.serial_thread.wait(1000)
-            self.CameraOff()
+            # Signal thread to quit and wait for it to finish
+            try:
+                self.aws_thread.quit()
+                self.aws_thread.wait(1500)
+            except Exception:
+                pass
+
+            # send camera off synchronously before exit
+            try:
+                # send a final camera-off request synchronously (avoid relying on worker)
+                AWS_Client.client.publish(AWS_Client.topic_cam, json.dumps({"timestamp": int(time.time()), "command": "OFF"}), 0)
+            except Exception:
+                pass
         finally:
             event.accept()
 
+
 # ---------------
-#  Application in
+#  Application entry
 # ---------------
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
