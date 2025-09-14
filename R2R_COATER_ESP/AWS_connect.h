@@ -2,22 +2,15 @@
 #include <WiFiClientSecure.h>
 #include <MQTTClient.h>
 #include <ArduinoJson.h>
+#include <WString.h> 
 #include "secrets.h"
 #include "AWS_connect.h"
-#include "board_config.h"
 
 extern const char* TOPIC_CONTROL;
-
-extern camera_config_t config;
-
+extern String rx;
 extern WiFiClientSecure net;
 extern MQTTClient client;
 
-extern volatile bool cameraActive;      // currently allowed to capture/publish
-extern volatile bool requestStop;       // set by MQTT handler to ask loop to deinit safely
-extern volatile bool publishing;        // set by loop while publishing
-
-extern volatile bool ledState;
-
+void handleLine(const String& line);
 void messageHandler(String &topic, String &payload);
 void connectAWS();
