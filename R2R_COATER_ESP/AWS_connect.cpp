@@ -3,29 +3,22 @@
 #include "HardwareSerial.h"
 #include "esp32-hal-gpio.h"
 #include "secrets.h"
-#include "board_config.h"
 #include "esp_camera.h"
 #include "AWS_connect.h"
 #include <WiFiClientSecure.h>
 #include <MQTTClient.h>
 #include <ArduinoJson.h>
 
-const char* TOPIC_CONTROL = "laptop/control/camera";
+const char* TOPIC_CONTROL = "laptop/control/command";
+extern String rx;
 
 WiFiClientSecure net;
 MQTTClient client;
 
-extern volatile bool cameraActive = false;      // currently allowed to capture/publish
-extern volatile bool requestStop = false;       // set by MQTT handler to ask loop to deinit safely
-extern volatile bool publishing = false;        // set by loop while publishing
-
-volatile bool ledState = false;
 
 void messageHandler(String &topic, String &payload) {
-  // Allocate a JSON document
+  // Parse JSON payload for a "command" field and call handleLine() with it
   StaticJsonDocument<200> doc;
-
-  // Parse JSON payload
   DeserializationError error = deserializeJson(doc, payload);
   if (error) {
     Serial.print("deserializeJson() failed: ");
@@ -34,46 +27,16 @@ void messageHandler(String &topic, String &payload) {
   }
 
   if (doc.containsKey("command")) {
-    String msg = doc["command"];
+    String msg = doc["command"].as<String>();
     msg.trim();
-    Serial.print("Command: ");
+    Serial.print("Command (from MQTT): ");
     Serial.println(msg);
 
-    if (msg.equalsIgnoreCase("ON")) {
-      cameraActive = true;
-
-      esp_err_t err = esp_camera_init(&config);
-      if (err != ESP_OK) {
-        Serial.printf("Camera init failed: 0x%x\n", err);
-        cameraActive = false;
-        // DO NOT block here. Return so MQTT loop can continue.
-        return;
-      } else {
-        Serial.println("Camera activated");
-      }
-    }
-    else if (msg.equalsIgnoreCase("OFF")) {
-      Serial.println("OFF received - requesting camera stop");
-      // stop capturing new frames immediately
-      cameraActive = false;
-      // request loop to deinit camera safely when it is not publishing
-      requestStop = true;
-      esp_camera_deinit(); 
-    } 
-    else if (msg.equalsIgnoreCase("FLASH")) {
-      ledState = !ledState;
-      if (ledState == true) {
-        digitalWrite(LED_GPIO_NUM, HIGH);
-      } 
-      else {
-        digitalWrite(LED_GPIO_NUM, LOW);
-      }
-    }
-    else {
-      Serial.println("Invalid command");
-    }
+    // call the command parser directly with the payload command
+    handleLine(msg);
   }
 }
+
 
 void connectAWS() {
   net.setCACert(AWS_CERT_CA);
